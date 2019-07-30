@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <title>smart home</title>
+  </head>
+  <body>
+   
+   <div class="image" id="canvas" >
+	  <img src="exmachina.png" alt=""  style="position: absolute;left:0px; top:0px;transform:scale(1.0)"/>
+   </div>
+   <a id="t" style="position: absolute;left:205px; top:220px;"></a>
+  </body>
+<script type="text/javascript" src="/jquery-1.6.4.min.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script language="javascript" >
+function putpanel() {
+   var div=document.getElementById("canvas");
+   for (var i=0;i<Panel_.length;i++ )
+   {
+	  var maxl=0;	
+	  for (var n=0;n<Panel_[i].text.length;n++ )
+	  	  if(Panel_[i].text[n].name.length>maxl)
+			maxl=Panel_[i].text[n].name.length;
+			
+	  for (var n=0;n<Panel_[i].text.length;n++ )
+	  {
+		 
+		 var a = document.createElement("a");
+         if(i==0)
+	        a.setAttribute("style","font-size:120%;color:white;position:absolute;left:"+String(Panel_[i].X+5)+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+		 else
+            a.setAttribute("style", "font-size:100%;color:white;position:absolute;left:"+String(Panel_[i].X+5)+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+                                      
+   	     a.innerHTML=Panel_[i].text[n].name;
+		 div.appendChild(a);
+		 
+		 
+		 var a = document.createElement("a");
+         if(i==0)
+	        a.setAttribute("style","font-size:120%;color:white;position:absolute;left:"+String(Panel_[i].X+15+(8*maxl))+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+		 else
+            a.setAttribute("style", "font-size:100%;color:white;position:absolute;left:"+String(Panel_[i].X+15+(8*maxl))+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+                                      
+   	     a.setAttribute("id", Panel_[i].text[n].id);
+		 div.appendChild(a);
+
+		 var a = document.createElement("a");
+         if(i==0)
+	        a.setAttribute("style","font-size:120%;color:white;position:absolute;left:"+String(Panel_[i].X+65+(8*maxl))+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+		 else
+            a.setAttribute("style", "font-size:100%;color:white;position:absolute;left:"+String(Panel_[i].X+65+(8*maxl))+"px;top:"+String(Panel_[i].Y+20*n+5)+"px;");
+                                      
+   	     a.innerHTML=Panel_[i].text[n].unit;
+		 div.appendChild(a);
+	  }
+   }
+}
+/*str ='[{"X":50,"Y":190,"text":[{"name":"T","id":"SH.Temp"},'+
+     '{"name":"H","id":"SH.H"}]},'+
+     '{"X":600,"Y":370,"text":[{"name":"V","id":"SH.V"},'+
+     '{"name":"I","id":"SH.I"},'+
+     '{"name":"P","id":"SH.P"},'+ 
+     '{"name":"E","id":"SH.E"}]}]';*/
+
+str ='[{"X":50,"Y":190,"text":[{"name":"T","id":"SH.Temp","unit":"C"},'+
+     '{"name":"H","id":"SH.H","unit":"%"}]},'+
+     '{"X":600,"Y":370,"text":[{"name":"V","id":"SH.V","unit":"V"},'+
+     '{"name":"I","id":"SH.I","unit":"A"},'+
+     '{"name":"P","id":"SH.P","unit":"W"},'+ 
+     '{"name":"E","id":"SH.E","unit":"Wh"}]}]';
+ 		
+var Panel_=JSON.parse(str);
+putpanel();
+socket = io.connect('/');
+
+socket.on('analog', function (data) {
+ if(data.length>10)
+ {
+	var test_obj=JSON.parse(data);
+	var t_=document.getElementById(test_obj.PtName);
+	//var t_=document.getElementById("SH.V");
+	//t_.innerHTML ="rev OK";
+   	if(t_!= undefined & test_obj.PtName!="")
+	   t_.innerHTML =String(test_obj.PtVal); // + "  "+test_obj.Unit;
+ }
+});
+
+socket.on('aitable', function (data) {
+ if(data.length>10)
+ {
+	var test_obj=JSON.parse(data);
+	for (var i=0;i<test_obj.length;i++ )
+	{
+		var t=document.getElementById(test_obj[i].PtName);
+		if(t!= undefined & test_obj.PtName!="")
+					t.innerHTML =String(test_obj[i].PtVal); //+ " XX "+test_obj[i].Unit;
+	}
+ }
+});
+	
+</script>
+</html>
