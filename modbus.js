@@ -2,7 +2,7 @@ var readholdingregister=function(add,regnum,regcnt)
 {
         var s=[];
         s[0]=add;
-        s[1]=3;
+        s[1]=4;
         var t=regnum/256;s[2]=parseInt(t);
         s[3]=regnum%256;
         t=regcnt/256;s[4]=parseInt(t);
@@ -41,21 +41,21 @@ var cal_crc=function(s_buf)
 var chk_crc=function(s_buf)
 {
         var s=[];
-        if((s_buf.length<3)|| (s_buf.length>18))
+        if((s_buf.length<3)|| (s_buf.length>30))
             return 0;
         var crc_l=s_buf[s_buf.length-2];
         var crc_h=s_buf[s_buf.length-1];
         s_buf.splice(s_buf.length-1,1);
         s_buf.splice(s_buf.length-1,1);
-        s=this.cal_crc(s_buf);
+        s=cal_crc(s_buf);
         if((crc_l==s[s.length-2]) & (crc_h==s[s.length-1]))
 		{
-			console.log("resultOK");
+			//console.log("resultOK");
             return 1;
 		}
         else
         {
-			console.log("result NOK "+s[s.length-2].toString());
+			//console.log("result NOK "+s[s.length-2].toString());
             return 1;
 		}
 
@@ -66,12 +66,14 @@ var decode=function(s_buf)
 	var s=[];
     if(s_buf.length>3)
 	{
+		//console.log('decode '+ s_buf);
 		if(chk_crc(s_buf))
 		{
-           var len=s_buf[1];
-		   if(s_buf.length>=(len+2)
+			var len=s_buf[2];
+			//console.log('crc ok '+s_buf.length + '  '+len);
+            if(s_buf.length>=(len+2))
 			   for(var i=0;i<len;i++)
-			       s.push(s_buf[i+2]);
+			       s.push(s_buf[i+3]);
 		}
 	}
 	return s;

@@ -1,6 +1,7 @@
 var io = require('socket.io-client');
 var socket = io.connect('http://localhost:2000', {reconnect: true});
-var mobus=require(./modbus.js);
+var modbus=require('./modbus.js');
+var sleep = require('sleep');
 
 
 var SerialPort = require('serialport');
@@ -24,68 +25,23 @@ serialPort.on('data', function (data) {
 function sendtoapp(ptname,ptval,ptunit)
 {
 	var str='{"PtName":"'+ptname+'","PtVal":'+ptval.toString()+',"Unit":"'+ptunit+'"}';
-	console.log("json="+str)
+	console.log("send to app.js "+str)
     socket.emit('analog1',str);
 
 }
-var readV()
+var readAll=function()
 {
       var s=[];
-      modbus.readholdingregister(1,0,3);
-	  sllep(0.2);
-      var s=modbus.decode(rev_buf);
-      if(s.length==6)
-	  {
-	  	  var V=s[0]*256+s[1]+(s[2]/10);
-		  sendtoapp('SH.V',V,'V');
-	  }
 	  rev_buf=[];
+      var str=modbus.readholdingregister(1,0,10);
+	  console.log('tx -> '+str);
+	  serialPort.write(str);
+	  
 }
-var readI()
+function decode_modbus()
 {
-      var s=[];
-      modbus.readholdingregister(1,0,3);
-	  sllep(0.2);
-      var s=modbus.decode(rev_buf);
-      if(s.length==6)
-	  {
-	  	  var I=s[0]*256+s[1]+(s[2]/10);
-		  sendtoapp('SH.I',I,'A');
-	  }
-	  rev_buf=[];
-}
-var readP()
-{
-      var s=[];
-      modbus.readholdingregister(1,0,3);
-	  sllep(0.2);
-      var s=modbus.decode(rev_buf);
-      if(s.length==6)
-	  {
-	  	  var P=s[0]*256+s[1]+(s[2]/10);
-		  sendtoapp('SH.P',P,'W');
-	  }
-	  rev_buf=[];
-}
-var readE()
-{
-      var s=[];
-      modbus.readholdingregister(1,0,3);
-	  sllep(0.2);
-      var s=modbus.decode(rev_buf);
-      if(s.length==6)
-	  {
-	  	  var E=s[0]*256+s[1]+(s[2]/10);
-		  sendtoapp('SH.E',E,'Wh');
-	  }
-	  rev_buf=[];
-}
-var readAll()
-{
-      var s=[];
-	  rev_buf=[];
-      modbus.readholdingregister(1,0,10);
-	  sllep(0.2);
+	  var s=[];
+	  console.log('rx <- '+rev_buf);
       var s=modbus.decode(rev_buf);
       if(s.length==20)
 	  {
@@ -109,6 +65,14 @@ var readAll()
 	  	  sendtoapp('SH.PF',PF,'%');
    
 	  }
-	  
 }
-setInterval(readAll, 5000);
+var timer_cnt=0;
+function timer()
+{
+	if(timer_cnt==0)
+       readAll();
+	else if(timer_cnt==1)
+      decode_modbus();
+	timer_cnt=(timer_cnt+1)%25;
+}
+setInterval(timer, 200);
