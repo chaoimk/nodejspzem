@@ -19,6 +19,8 @@
   node app.js
 
 5.run pzem_modbus.js for read data from pzem module
-  node pzem_modbus.js 
+  node pzem_modbus.js
+
+6. run mqtt.js for send to cloudmqtt
 
 
