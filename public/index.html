@@ -77,18 +77,6 @@ socket.on('analog', function (data) {
  }
 });
 
-socket.on('aitable', function (data) {
- if(data.length>10)
- {
-	var test_obj=JSON.parse(data);
-	for (var i=0;i<test_obj.length;i++ )
-	{
-		var t=document.getElementById(test_obj[i].PtName);
-		if(t!= undefined & test_obj.PtName!="")
-					t.innerHTML =String(test_obj[i].PtVal)+"  "+test_obj[i].Unit;
-	}
- }
-});
 	
 </script>
 </html>
