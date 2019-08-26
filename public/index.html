@@ -56,7 +56,6 @@ function putpanel() {
    }
 }
 
-
 str ='[{"X":50,"Y":190,"text":[{"name":"T","id":"SH.Temp","unit":"C"},'+
      '{"name":"H","id":"SH.H","unit":"%"}]},'+
      '{"X":600,"Y":370,"text":[{"name":"V","id":"SH.V","unit":"V"},'+
@@ -74,7 +73,7 @@ socket.on('analog', function (data) {
 	var test_obj=JSON.parse(data);
 	var t_=document.getElementById(test_obj.PtName);
 	if(t_!= undefined & test_obj.PtName!="")
-	   t_.innerHTML =String(test_obj.PtVal); // + "  "+test_obj.Unit;
+	   t_.innerHTML =String(test_obj.PtVal) + "  "+test_obj.Unit;
  }
 });
 
@@ -86,7 +85,7 @@ socket.on('aitable', function (data) {
 	{
 		var t=document.getElementById(test_obj[i].PtName);
 		if(t!= undefined & test_obj.PtName!="")
-					t.innerHTML =String(test_obj[i].PtVal); 
+					t.innerHTML =String(test_obj[i].PtVal)+"  "+test_obj[i].Unit;
 	}
  }
 });
