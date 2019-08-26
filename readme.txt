@@ -12,12 +12,13 @@
   cd /home/pi
   npm install express --save
   npm install serialport --unsafe-perm
-  sudo npm install socket.io
+  npm install socket.io
+  npm install mqtt --save
 
 4.run app.js for web server
   node app.js
 
-5.run pzem.js for read data from pzem module
-  node pzem.js 
+5.run pzem_modbus.js for read data from pzem module
+  node pzem_modbus.js 
 
 
