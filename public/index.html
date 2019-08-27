@@ -61,6 +61,8 @@ str ='[{"X":50,"Y":190,"text":[{"name":"T","id":"SH.Temp","unit":"C"},'+
      '{"X":600,"Y":370,"text":[{"name":"V","id":"SH.V","unit":"V"},'+
      '{"name":"I","id":"SH.I","unit":"A"},'+
      '{"name":"P","id":"SH.P","unit":"W"},'+ 
+	 '{"name":"F","id":"SH.F","unit":"Hz"},'+ 
+	 '{"name":"PF","id":"SH.PF","unit":"%"},'+ 
      '{"name":"E","id":"SH.E","unit":"Wh"}]}]';
  		
 var Panel_=JSON.parse(str);
@@ -73,7 +75,7 @@ socket.on('analog', function (data) {
 	var test_obj=JSON.parse(data);
 	var t_=document.getElementById(test_obj.PtName);
 	if(t_!= undefined & test_obj.PtName!="")
-	   t_.innerHTML =String(test_obj.PtVal); // + "  "+test_obj.Unit;
+	   t_.innerHTML =String(test_obj.PtVal) ; //+ "  "+test_obj.Unit;
  }
 });
 
