@@ -39,6 +39,6 @@ function sendanalog(data)
 {
       io.emit('analog', data);
 	  /*var Pt=JSON.parse(data);   //for mqtt
-	  client.publish(Pt.PtName,Pt.PtVal);*/
+	  client.publish(Pt.PtName,Pt.PtVal.toString());*/
 	  console.log('data='+data);
 }
